@@ -39,8 +39,6 @@ const VendorFormModal = ({ isOpen, onClose, onSubmit, vendor }: VendorFormModalP
     
     if (!formData.vendor_code.trim()) {
       newErrors.vendor_code = 'Vendor code is required';
-    } else if (!/^[A-Z0-9]+$/i.test(formData.vendor_code)) {
-      newErrors.vendor_code = 'Vendor code must be alphanumeric';
     }
 
     setErrors(newErrors);
@@ -91,7 +89,7 @@ const VendorFormModal = ({ isOpen, onClose, onSubmit, vendor }: VendorFormModalP
           <Input
             id="vendor_code"
             value={formData.vendor_code}
-            onChange={(e) => setFormData({ ...formData, vendor_code: e.target.value.toUpperCase() })}
+            onChange={(e) => setFormData({ ...formData, vendor_code: e.target.value })}
             placeholder="e.g., ACME001"
             className={errors.vendor_code ? 'border-destructive' : ''}
           />
