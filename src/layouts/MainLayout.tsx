@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Package, Layers, Home } from 'lucide-react';
+import ThemeToggle from '@/components/shared/ThemeToggle';
 
 interface MainLayoutProps {
   children: ReactNode;
@@ -53,10 +54,11 @@ const MainLayout = ({ children }: MainLayoutProps) => {
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-sidebar-border">
+        <div className="p-4 border-t border-sidebar-border flex items-center justify-between">
           <p className="text-xs text-muted-foreground">
             Version 1.0.0
           </p>
+          <ThemeToggle />
         </div>
       </aside>
 
