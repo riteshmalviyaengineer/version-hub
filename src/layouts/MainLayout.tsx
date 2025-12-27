@@ -13,6 +13,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const navItems = [
     { path: '/', label: 'Dashboard', icon: Home },
     { path: '/vendors', label: 'Vendors', icon: Package },
+    { path: '/versions', label: 'Versions', icon: Package },
   ];
 
   return (

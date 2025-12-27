@@ -25,6 +25,17 @@ const initialState: VersionsState = {
 
 // Async thunks for version operations
 
+export const fetchAllVersions = createAsyncThunk(
+  'versions/fetchByVendor',
+  async () => {
+    try {
+      const response = await versionService.Allversions();
+      return response;
+    } catch (error: any) {
+      return     }
+  }
+);
+
 export const fetchVersionsByVendor = createAsyncThunk(
   'versions/fetchByVendor',
   async (vendorId: number, { rejectWithValue }) => {

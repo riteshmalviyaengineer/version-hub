@@ -11,6 +11,7 @@ import VendorListingPage from "./pages/VendorListingPage";
 import VersionListingPage from "./pages/VersionListingPage";
 import VersionDetailPage from "./pages/VersionDetailPage";
 import NotFound from "./pages/NotFound";
+import AllVersionsListingPage from './pages/AllVersionsListingPage';
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,8 @@ const App = () => (
               <Route path="/vendors" element={<VendorListingPage />} />
               <Route path="/vendors/:vendorId/versions" element={<VersionListingPage />} />
               <Route path="/vendors/:vendorId/versions/:versionId" element={<VersionDetailPage />} />
+              <Route path="/versions" element={<AllVersionsListingPage />} />
+
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

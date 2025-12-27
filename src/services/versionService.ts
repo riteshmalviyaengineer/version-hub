@@ -4,6 +4,8 @@ import api from './api';
 export interface Version {
   id: number;
   vendor_id: number;
+  vendor_name: string;
+  vendor_code: string;
   version_name: string;
   version_code: string;
   created_at: string;
@@ -37,6 +39,12 @@ export interface CreateVersionDetailPayload {
 
 // Version API service methods
 export const versionService = {
+
+  Allversions: async (): Promise<VersionsResponse> => {
+    const response = await api.get('/vendor-versions/get_all');
+    return response.data;
+  },
+
   // Get all versions for a vendor
   getByVendor: async (vendorId: number): Promise<VersionsResponse> => {
     const response = await api.get(`/versions/get_by_vendor?vendor_id=${vendorId}`);
