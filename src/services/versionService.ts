@@ -3,12 +3,12 @@ import api from './api';
 // Version type definition
 export interface Version {
   id: number;
-  vendor_id: number;
-  vendor_name: string;
-  vendor_code: string;
-  version_name: string;
-  version_code: string;
-  created_at: string;
+  vendor_id?: number;
+  vendor_name?: string;
+  vendor_code?: string;
+  version_name?: string;
+  version_code?: string;
+  created_at?: string;
 }
 
 export interface VersionDetail {
@@ -47,7 +47,7 @@ export const versionService = {
 
   // Get all versions for a vendor
   getByVendor: async (vendorId: number): Promise<VersionsResponse> => {
-    const response = await api.get(`/versions/get_by_vendor?vendor_id=${vendorId}`);
+    const response = await api.get(`/vendor-versions/get_by_vendor/${vendorId}`);
     return response.data;
   },
 
@@ -59,7 +59,7 @@ export const versionService = {
 
   // Create a new version
   create: async (payload: CreateVersionPayload): Promise<Version> => {
-    const response = await api.post('/versions/create', payload);
+    const response = await api.post('/vendor-versions/create', payload);
     return response.data;
   },
 

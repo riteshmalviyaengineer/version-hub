@@ -91,6 +91,7 @@ const VersionListingPage = () => {
           title: 'Version created',
           description: `${data.version_name} has been created successfully.`,
         });
+        await dispatch(fetchVersionsByVendor(Number(vendorId)));
       }
       setIsFormOpen(false);
       setEditingVersion(null);
@@ -152,7 +153,8 @@ const VersionListingPage = () => {
               <thead>
                 <tr>
                   <th>Version Name</th>
-                  <th>Version Code</th>
+                  <th>Vendor Code</th>
+                  <th>Created At</th>
                   <th className="w-32 text-right">Actions</th>
                 </tr>
               </thead>
@@ -170,7 +172,12 @@ const VersionListingPage = () => {
                     </td>
                     <td>
                       <code className="px-2 py-1 bg-secondary rounded text-xs font-mono">
-                        {version.version_code}
+                        {version.vendor_code}
+                      </code>
+                    </td>
+                     <td>
+                      <code className="px-2 py-1 bg-secondary rounded text-xs font-mono">
+                        {version.created_at}
                       </code>
                     </td>
                     <td>
