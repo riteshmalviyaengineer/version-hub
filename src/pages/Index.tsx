@@ -35,7 +35,7 @@ const Index = () => {
 
         {/* Feature Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16 max-w-4xl w-full animate-slide-in">
-          <div className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
+          <Link to="/vendors" className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <Package className="w-5 h-5 text-primary" />
             </div>
@@ -43,7 +43,7 @@ const Index = () => {
             <p className="text-sm text-muted-foreground">
               Create and organize vendors with unique codes and metadata.
             </p>
-          </div>
+          </Link>
 
           {/* <div className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">

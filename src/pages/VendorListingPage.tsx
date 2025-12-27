@@ -80,6 +80,7 @@ const VendorListingPage = () => {
           description: `${data.vendor_name} has been created successfully.`,
         });
       }
+      dispatch(fetchVendors());
       setIsFormOpen(false);
       setEditingVendor(null);
     } catch (error) {
