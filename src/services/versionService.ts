@@ -65,13 +65,13 @@ export const versionService = {
 
   // Update an existing version
   update: async (id: number, payload: Partial<CreateVersionPayload>): Promise<Version> => {
-    const response = await api.put(`/versions/update?id=${id}`, payload);
+    const response = await api.put(`/vendor-versions/update?id=${id}`, payload);
     return response.data;
   },
 
   // Delete a version
   delete: async (versionId: number): Promise<{ message: string; status_code: number }> => {
-    const response = await api.delete(`/versions/delete?version_id=${versionId}`);
+    const response = await api.delete(`/vendor-versions/delete?version_id=${versionId}`);
     return response.data;
   },
 

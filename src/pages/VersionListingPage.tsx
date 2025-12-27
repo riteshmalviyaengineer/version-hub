@@ -91,8 +91,8 @@ const VersionListingPage = () => {
           title: 'Version created',
           description: `${data.version_name} has been created successfully.`,
         });
-        await dispatch(fetchVersionsByVendor(Number(vendorId)));
       }
+      await dispatch(fetchVersionsByVendor(Number(vendorId)));
       setIsFormOpen(false);
       setEditingVersion(null);
     } catch (error) {
