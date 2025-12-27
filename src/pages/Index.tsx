@@ -45,7 +45,7 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
+          {/* <div className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <GitBranch className="w-5 h-5 text-primary" />
             </div>
@@ -53,9 +53,9 @@ const Index = () => {
             <p className="text-sm text-muted-foreground">
               Track multiple versions per vendor with full CRUD operations.
             </p>
-          </div>
+          </div> */}
 
-          <div className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
+          {/* <div className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <BarChart3 className="w-5 h-5 text-primary" />
             </div>
@@ -63,7 +63,7 @@ const Index = () => {
             <p className="text-sm text-muted-foreground">
               Configure version parameters with an integrated code editor.
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </MainLayout>
