@@ -5,7 +5,7 @@ import Editor from '@monaco-editor/react';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { fetchVersionDetails, createVersionDetail, updateVersionDetail, deleteVersionDetail, fetchVersionById } from '@/store/versionsSlice';
 import { fetchVendors } from '@/store/vendorsSlice';
-import { VersionDetail, CreateVersionDetailPayload } from '@/services/versionService';
+import { CreateVersionDetailPayload, VendorMappingVersionDetail } from '@/services/versionService';
 import MainLayout from '@/layouts/MainLayout';
 import PageHeader from '@/components/shared/PageHeader';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
@@ -28,16 +28,16 @@ const VersionDetailPage = () => {
   const vendor = vendors.find((v) => v.id === Number(vendorId));
 
   // Local state for editing
-  const [localDetails, setLocalDetails] = useState<VersionDetail[]>([]);
+  const [localDetails, setLocalDetails] = useState<VendorMappingVersionDetail[]>([]);
   const [newRow, setNewRow] = useState<Omit<CreateVersionDetailPayload, 'version_id'> | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
-  const [detailToDelete, setDetailToDelete] = useState<VersionDetail | null>(null);
+  const [detailToDelete, setDetailToDelete] = useState<VendorMappingVersionDetail | null>(null);
   const [hasChanges, setHasChanges] = useState(false);
 
   useEffect(() => {
     if (versionId) {
       dispatch(fetchVersionDetails(Number(versionId)));
-      dispatch(fetchVersionById(Number(versionId)));
+      // dispatch(fetchVersionById(Number(versionId)));
       if (vendors.length === 0) {
         dispatch(fetchVendors());
       }
@@ -88,10 +88,10 @@ const VersionDetailPage = () => {
     }
   };
 
-  const handleUpdateDetail = (id: number, field: keyof VersionDetail, value: string | number) => {
+  const handleUpdateDetail = (id: number, field: keyof VendorMappingVersionDetail, value: string | number) => {
     setLocalDetails((prev) =>
       prev.map((detail) =>
-        detail.id === id ? { ...detail, [field]: value } : detail
+        detail.vendor_system_column_id === id ? { ...detail, [field]: value } : detail
       )
     );
     setHasChanges(true);
@@ -101,20 +101,20 @@ const VersionDetailPage = () => {
     try {
       // Find changed details and update them
       for (const detail of localDetails) {
-        const original = versionDetails.find((d) => d.id === detail.id);
-        if (
-          original &&
-          (original.numeric_value !== detail.numeric_value ||
-           original.code_content !== detail.code_content)
-        ) {
-          await dispatch(updateVersionDetail({
-            id: detail.id,
-            payload: {
-              numeric_value: detail.numeric_value,
-              code_content: detail.code_content,
-            },
-          })).unwrap();
-        }
+        // const original = versionDetails.find((d) => d.id === detail.vendor_system_column_id);
+        // if (
+          // original &&
+          // (original.column_name !== detail.column_name ||
+          //  original.code !== detail.code)
+        // ) {
+        //   await dispatch(updateVersionDetail({
+        //     id: detail.vendor_system_column_id,
+        //     payload: {
+              // column_name: detail.column_name,
+              // code: detail.code,
+        //     },
+        //   })).unwrap();
+        // }
       }
       
       toast({
@@ -131,7 +131,7 @@ const VersionDetailPage = () => {
     }
   };
 
-  const handleDeleteClick = (detail: VersionDetail) => {
+  const handleDeleteClick = (detail: VendorMappingVersionDetail) => {
     setDetailToDelete(detail);
     setDeleteConfirmOpen(true);
   };
@@ -139,7 +139,7 @@ const VersionDetailPage = () => {
   const handleConfirmDelete = async () => {
     if (detailToDelete) {
       try {
-        await dispatch(deleteVersionDetail(detailToDelete.id)).unwrap();
+        await dispatch(deleteVersionDetail(detailToDelete.vendor_system_column_id)).unwrap();
         toast({
           title: 'Row deleted',
           description: 'Detail row has been deleted successfully.',
@@ -209,73 +209,11 @@ const VersionDetailPage = () => {
             {/* Table Header */}
             <div className="bg-card rounded-lg border border-border overflow-hidden">
               <div className="grid grid-cols-12 gap-4 bg-table-header px-4 py-3 text-sm font-medium text-muted-foreground border-b border-border">
-                <div className="col-span-2">Label</div>
-                <div className="col-span-2">Numeric Value</div>
-                <div className="col-span-7">Code Content</div>
-                <div className="col-span-1 text-right">Actions</div>
+                <div className="col-span-3">DB column</div>
+                <div className="col-span-2">Vendor column</div>
+                <div className="col-span-7">Code</div>
+                {/* <div className="col-span-1 text-right">Actions</div> */}
               </div>
-
-              {/* Existing Rows */}
-              {localDetails.map((detail) => (
-                <div
-                  key={detail.id}
-                  className="grid grid-cols-12 gap-4 px-4 py-4 border-b border-border last:border-b-0 items-start animate-fade-in"
-                >
-                  {/* Column A: Static Label */}
-                  <div className="col-span-2">
-                    <div className="px-3 py-2 bg-secondary rounded-md text-sm font-medium">
-                      {detail.label}
-                    </div>
-                  </div>
-
-                  {/* Column B: Numeric Input */}
-                  <div className="col-span-2">
-                    <Input
-                      type="number"
-                      value={detail.numeric_value}
-                      onChange={(e) =>
-                        handleUpdateDetail(detail.id, 'numeric_value', Number(e.target.value))
-                      }
-                      className="font-mono"
-                    />
-                  </div>
-
-                  {/* Column C: Code Editor */}
-                  <div className="col-span-7">
-                    <div className="code-editor-container h-48">
-                      <Editor
-                        height="100%"
-                        language="python"
-                        theme="vs-dark"
-                        value={detail.code_content}
-                        onChange={(value) =>
-                          handleUpdateDetail(detail.id, 'code_content', value || '')
-                        }
-                        options={{
-                          minimap: { enabled: false },
-                          fontSize: 13,
-                          lineNumbers: 'on',
-                          scrollBeyondLastLine: false,
-                          wordWrap: 'on',
-                          padding: { top: 8, bottom: 8 },
-                        }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="col-span-1 flex justify-end">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeleteClick(detail)}
-                      className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
-                </div>
-              ))}
 
               {/* New Row Form */}
               {newRow && (
@@ -340,6 +278,70 @@ const VersionDetailPage = () => {
                   </div>
                 </div>
               )}
+
+              {/* Existing Rows */}
+              {localDetails.map((detail) => (
+                <div
+                  key={detail.vendor_system_column_id}
+                  className="grid grid-cols-12 gap-4 px-4 py-4 border-b border-border last:border-b-0 items-start animate-fade-in"
+                >
+                  {/* Column A: Static Label */}
+                  <div className="col-span-3">
+                    <div className="px-3 py-2 bg-secondary rounded-md text-sm font-medium">
+                      {detail.vendor_system_column_name}
+                    </div>
+                  </div>
+
+                  {/* Column B: Numeric Input */}
+                  <div className="col-span-2">
+                    <Input
+                      type="text"
+                      value={detail.column_name}
+                      // onChange={(e) =>
+                        // handleUpdateDetail(detail.vendor_system_column_id, 'numeric_value', Number(e.target.value))
+                      // }
+                      className="font-mono"
+                    />
+                  </div>
+
+                  {/* Column C: Code Editor */}
+                  <div className="col-span-7">
+                    <div className="code-editor-container h-48">
+                      <Editor
+                        height="100%"
+                        language="python"
+                        theme="vs-dark"
+                        value={detail.code}
+                        onChange={(value) =>
+                          handleUpdateDetail(detail.vendor_system_column_id, 'code', value || '')
+                        }
+                        options={{
+                          minimap: { enabled: false },
+                          fontSize: 13,
+                          lineNumbers: 'on',
+                          scrollBeyondLastLine: false,
+                          wordWrap: 'on',
+                          padding: { top: 8, bottom: 8 },
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  {/* <div className="col-span-1 flex justify-end">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDeleteClick(detail)}
+                      className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
+                  </div> */}
+                </div>
+              ))}
+
+              
             </div>
           </div>
         )}
@@ -351,7 +353,7 @@ const VersionDetailPage = () => {
         onClose={() => setDeleteConfirmOpen(false)}
         onConfirm={handleConfirmDelete}
         title="Delete Row"
-        description={`Are you sure you want to delete the row "${detailToDelete?.label}"? This action cannot be undone.`}
+        description={`Are you sure you want to delete the row "${detailToDelete?.column_name}"? This action cannot be undone.`}
         confirmText="Delete"
         variant="destructive"
       />

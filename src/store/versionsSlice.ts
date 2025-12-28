@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { versionService, Version, VersionDetail, CreateVersionPayload, CreateVersionDetailPayload } from '@/services/versionService';
+import { versionService, Version, VersionDetail, CreateVersionPayload, CreateVersionDetailPayload, VendorMappingVersionDetail } from '@/services/versionService';
 
 // State interface
 interface VersionsState {
@@ -8,7 +8,7 @@ interface VersionsState {
   loading: boolean;
   error: string | null;
   selectedVersion: Version | null;
-  versionDetails: VersionDetail[];
+  versionDetails: VendorMappingVersionDetail[];
   detailsLoading: boolean;
 }
 
@@ -101,7 +101,7 @@ export const fetchVersionDetails = createAsyncThunk(
   async (versionId: number, { rejectWithValue }) => {
     try {
       const response = await versionService.getDetails(versionId);
-      return response;
+      return response || [];
     } catch (error: any) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch version details');
     }
@@ -223,14 +223,14 @@ const versionsSlice = createSlice({
       })
       // Update detail
       .addCase(updateVersionDetail.fulfilled, (state, action) => {
-        const index = state.versionDetails.findIndex((d) => d.id === action.payload.id);
+        const index = state.versionDetails.findIndex((d) => d.mapping_id === action.payload.mapping_id);
         if (index !== -1) {
           state.versionDetails[index] = action.payload;
         }
       })
       // Delete detail
       .addCase(deleteVersionDetail.fulfilled, (state, action) => {
-        state.versionDetails = state.versionDetails.filter((d) => d.id !== action.payload);
+        state.versionDetails = state.versionDetails.filter((d) => d.mapping_id !== action.payload);
       });
   },
 });
