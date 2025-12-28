@@ -1,5 +1,12 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { versionService, Version, VersionDetail, CreateVersionPayload, CreateVersionDetailPayload, VendorMappingVersionDetail } from '@/services/versionService';
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import {
+  versionService,
+  Version,
+  VersionDetail,
+  CreateVersionPayload,
+  CreateVersionDetailPayload,
+  VendorMappingVersionDetail,
+} from "@/services/versionService";
 
 // State interface
 interface VersionsState {
@@ -26,127 +33,149 @@ const initialState: VersionsState = {
 // Async thunks for version operations
 
 export const fetchAllVersions = createAsyncThunk(
-  'versions/fetchByVendor',
+  "versions/fetchByVendor",
   async () => {
     try {
       const response = await versionService.Allversions();
       return response;
     } catch (error: any) {
-      return     }
+      return;
+    }
   }
 );
 
 export const fetchVersionsByVendor = createAsyncThunk(
-  'versions/fetchByVendor',
+  "versions/fetchByVendor",
   async (vendorId: number, { rejectWithValue }) => {
     try {
       const response = await versionService.getByVendor(vendorId);
       return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch versions');
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch versions"
+      );
     }
   }
 );
 
 export const fetchVersionById = createAsyncThunk(
-  'versions/fetchById',
+  "versions/fetchById",
   async (versionId: number, { rejectWithValue }) => {
     try {
       const response = await versionService.getById(versionId);
       return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch version');
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch version"
+      );
     }
   }
 );
 
 export const createVersion = createAsyncThunk(
-  'versions/create',
+  "versions/create",
   async (payload: CreateVersionPayload, { rejectWithValue }) => {
     try {
       const response = await versionService.create(payload);
       return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to create version');
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to create version"
+      );
     }
   }
 );
 
 export const updateVersion = createAsyncThunk(
-  'versions/update',
-  async ({ id, payload }: { id: number; payload: Partial<CreateVersionPayload> }, { rejectWithValue }) => {
+  "versions/update",
+  async (
+    { id, payload }: { id: number; payload: Partial<CreateVersionPayload> },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await versionService.update(id, payload);
       return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to update version');
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update version"
+      );
     }
   }
 );
 
 export const deleteVersion = createAsyncThunk(
-  'versions/delete',
+  "versions/delete",
   async (versionId: number, { rejectWithValue }) => {
     try {
       await versionService.delete(versionId);
       return versionId;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to delete version');
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to delete version"
+      );
     }
   }
 );
 
 export const fetchVersionDetails = createAsyncThunk(
-  'versions/fetchDetails',
+  "versions/fetchDetails",
   async (versionId: number, { rejectWithValue }) => {
     try {
       const response = await versionService.getDetails(versionId);
       return response || [];
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to fetch version details');
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch version details"
+      );
     }
   }
 );
 
 export const createVersionDetail = createAsyncThunk(
-  'versions/createDetail',
+  "versions/createDetail",
   async (payload: CreateVersionDetailPayload, { rejectWithValue }) => {
     try {
       const response = await versionService.createDetail(payload);
       return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to create detail');
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to create detail"
+      );
     }
   }
 );
 
 export const updateVersionDetail = createAsyncThunk(
-  'versions/updateDetail',
-  async ({ id, payload }: { id: number; payload: Partial<CreateVersionDetailPayload> }, { rejectWithValue }) => {
+  "versions/updateDetail",
+  async ({ id, payload }: { id: any; payload: any }, { rejectWithValue }) => {
     try {
-      const response = await versionService.updateDetail(id, payload);
+      const response = await versionService.bulkupdateDetail(id, payload);
       return response;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to update detail');
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to update detail"
+      );
     }
   }
 );
 
 export const deleteVersionDetail = createAsyncThunk(
-  'versions/deleteDetail',
+  "versions/deleteDetail",
   async (detailId: number, { rejectWithValue }) => {
     try {
       await versionService.deleteDetail(detailId);
       return detailId;
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to delete detail');
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to delete detail"
+      );
     }
   }
 );
 
 // Slice definition
 const versionsSlice = createSlice({
-  name: 'versions',
+  name: "versions",
   initialState,
   reducers: {
     setSelectedVersion: (state, action: PayloadAction<Version | null>) => {
@@ -196,7 +225,9 @@ const versionsSlice = createSlice({
       })
       // Update version
       .addCase(updateVersion.fulfilled, (state, action) => {
-        const index = state.versions.findIndex((v) => v.id === action.payload.id);
+        const index = state.versions.findIndex(
+          (v) => v.id === action.payload.id
+        );
         if (index !== -1) {
           state.versions[index] = action.payload;
         }
@@ -223,17 +254,22 @@ const versionsSlice = createSlice({
       })
       // Update detail
       .addCase(updateVersionDetail.fulfilled, (state, action) => {
-        const index = state.versionDetails.findIndex((d) => d.mapping_id === action.payload.mapping_id);
+        const index = state.versionDetails.findIndex(
+          (d) => d.mapping_id === action.payload.mapping_id
+        );
         if (index !== -1) {
           state.versionDetails[index] = action.payload;
         }
       })
       // Delete detail
       .addCase(deleteVersionDetail.fulfilled, (state, action) => {
-        state.versionDetails = state.versionDetails.filter((d) => d.mapping_id !== action.payload);
+        state.versionDetails = state.versionDetails.filter(
+          (d) => d.mapping_id !== action.payload
+        );
       });
   },
 });
 
-export const { setSelectedVersion, clearError, clearVersions } = versionsSlice.actions;
+export const { setSelectedVersion, clearError, clearVersions } =
+  versionsSlice.actions;
 export default versionsSlice.reducer;

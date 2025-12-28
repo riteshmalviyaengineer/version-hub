@@ -99,23 +99,31 @@ const VersionDetailPage = () => {
 
   const handleSaveChanges = async () => {
     try {
-      // Find changed details and update them
-      for (const detail of localDetails) {
-        // const original = versionDetails.find((d) => d.id === detail.vendor_system_column_id);
-        // if (
-          // original &&
-          // (original.column_name !== detail.column_name ||
-          //  original.code !== detail.code)
-        // ) {
-        //   await dispatch(updateVersionDetail({
-        //     id: detail.vendor_system_column_id,
-        //     payload: {
-              // column_name: detail.column_name,
-              // code: detail.code,
-        //     },
-        //   })).unwrap();
+
+      await dispatch(updateVersionDetail({
+        id: versionId,
+        payload: localDetails,
+      })).unwrap();
+
+      dispatch(fetchVersionDetails(Number(versionId)));
+
+        // Find changed details and update them
+        // for (const detail of localDetails) {
+          // const original = versionDetails.find((d) => d.mapping_id === detail.vendor_system_column_id);
+          // if (
+          //   original &&
+          //   (original.column_name !== detail.column_name ||
+          //    original.code !== detail.code)
+          // ) {
+          //   await dispatch(updateVersionDetail({
+          //     id: detail.vendor_system_column_id,
+          //     payload: {
+          //       column_name: detail.column_name,
+          //       code: detail.code,
+          //     },
+          //   })).unwrap();
+          // }
         // }
-      }
       
       toast({
         title: 'Changes saved',
@@ -159,12 +167,13 @@ const VersionDetailPage = () => {
   return (
     <MainLayout>
       <PageHeader
-        title={`Version Details${selectedVersion ? ` - ${selectedVersion.version_name}` : ''}`}
+        title={`Version Details${selectedVersion ? ` - ${selectedVersion.version_name}` : ''} : Total Columns: ${localDetails.length}`}
         description="Configure version parameters and code"
         breadcrumbs={[
           { label: 'Vendors', path: '/vendors' },
           { label: vendor?.vendor_name || 'Vendor', path: `/vendors/${vendorId}/versions` },
-          { label: selectedVersion?.version_name || 'Version' },
+          { label: selectedVersion?.version_name || 'Version' , path: `/vendors/${vendorId}/versions`},
+          { label: versionId },
         ]}
         actions={
           <div className="flex items-center gap-2">
@@ -182,10 +191,7 @@ const VersionDetailPage = () => {
                 Save Changes
               </Button>
             )}
-            <Button onClick={handleAddRow} className="gap-2">
-              <Plus className="w-4 h-4" />
-              Add Row
-            </Button>
+            
           </div>
         }
       />
@@ -297,9 +303,9 @@ const VersionDetailPage = () => {
                     <Input
                       type="text"
                       value={detail.column_name}
-                      // onChange={(e) =>
-                        // handleUpdateDetail(detail.vendor_system_column_id, 'numeric_value', Number(e.target.value))
-                      // }
+                      onChange={(e) =>
+                        handleUpdateDetail(detail.vendor_system_column_id, 'column_name', e.target.value)
+                      }
                       className="font-mono"
                     />
                   </div>

@@ -133,15 +133,15 @@ export const versionService = {
     return response.data;
   },
 
-  // Update version detail
-  updateDetail: async (
-    id: number,
+  // Bulk Update version detail
+  bulkupdateDetail: async (
+    id: any,
     payload: Partial<CreateVersionDetailPayload>
   ): Promise<VendorMappingVersionDetail> => {
-    const response = await api.put(
-      `/versions/details/update?id=${id}`,
-      payload
-    );
+    const response = await api.post(`/vendor-mappings/bulk-create`, {
+      mappings: payload,
+      version_id: id,
+    });
     return response.data;
   },
 
