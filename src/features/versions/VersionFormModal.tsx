@@ -37,9 +37,9 @@ const VersionFormModal = ({ isOpen, onClose, onSubmit, version }: VersionFormMod
       newErrors.version_name = 'Version name is required';
     }
     
-    if (!formData.version_code.trim()) {
-      newErrors.version_code = 'Version code is required';
-    }
+    // if (!formData.version_code.trim()) {
+    //   newErrors.version_code = 'Version code is required';
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
