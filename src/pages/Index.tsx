@@ -45,7 +45,7 @@ const Index = () => {
             </p>
           </Link>
 
-          <div className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
+          <Link to="/versions"  className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <GitBranch className="w-5 h-5 text-primary" />
             </div>
@@ -53,7 +53,7 @@ const Index = () => {
             <p className="text-sm text-muted-foreground">
               Track multiple versions per vendor with full CRUD operations.
             </p>
-          </div>
+          </Link>
 
           <div className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
