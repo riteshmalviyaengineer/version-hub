@@ -15,7 +15,7 @@ const Index = () => {
 
           {/* Title */}
           <h1 className="text-4xl font-bold text-foreground mb-4">
-            Welcome to <span className="text-gradient">VendorHub</span>
+            Welcome to <span className="text-gradient">Plugugly</span>
           </h1>
 
           {/* Description */}
@@ -45,7 +45,7 @@ const Index = () => {
             </p>
           </Link>
 
-          <Link to="/versions"  className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
+          {/* <Link to="/versions"  className="bg-card border border-border rounded-xl p-6 hover:border-primary/50 transition-colors">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center mb-4">
               <GitBranch className="w-5 h-5 text-primary" />
             </div>
@@ -63,7 +63,7 @@ const Index = () => {
             <p className="text-sm text-muted-foreground">
               Configure version parameters with an integrated code editor.
             </p>
-          </div>
+          </div> */}
         </div>
       </div>
     </MainLayout>

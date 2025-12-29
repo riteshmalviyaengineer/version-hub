@@ -11,9 +11,9 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const location = useLocation();
 
   const navItems = [
-    { path: '/', label: 'Dashboard', icon: Home },
+    // { path: '/', label: 'Dashboard', icon: Home },
     { path: '/vendors', label: 'Vendors', icon: Package },
-    { path: '/versions', label: 'Versions', icon: Package },
+    // { path: '/versions', label: 'Versions', icon: Package },
   ];
 
   return (
@@ -22,10 +22,10 @@ const MainLayout = ({ children }: MainLayoutProps) => {
       <aside className="w-64 bg-sidebar border-r border-sidebar-border flex flex-col">
         <div className="p-6 border-b border-sidebar-border">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+            {/* <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <Layers className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="font-semibold text-lg text-sidebar-foreground">VendorHub</span>
+            </div> */}
+            <span className="font-semibold text-lg text-sidebar-foreground">Plugugly</span>
           </div>
         </div>
 
