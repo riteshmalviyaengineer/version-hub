@@ -15,6 +15,16 @@ import VersionFormModal from '@/features/versions/VersionFormModal';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 
+ const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
 const VersionListingPage = () => {
   const { vendorId } = useParams<{ vendorId: string }>();
   const navigate = useNavigate();
@@ -175,11 +185,9 @@ const VersionListingPage = () => {
                         {version.vendor_code}
                       </code>
                     </td>
-                     <td>
-                      <code className="px-2 py-1 bg-secondary rounded text-xs font-mono">
-                        {version.created_at}
-                      </code>
-                    </td>
+                    
+                    <td className="text-muted-foreground">{formatDate(version.created_at)}</td>
+
                     <td>
                       <div className="flex items-center justify-end gap-1">
                         <Button
