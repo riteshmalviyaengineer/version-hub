@@ -99,10 +99,17 @@ const VersionDetailPage = () => {
 
   const handleSaveChanges = async () => {
     try {
+      
+      // Update localDetails to set column_name to source_column_name and remove source_column_name for every index
+      const updatedDetails = localDetails.map(({ source_column_name, ...detail }) => ({
+        ...detail,
+        column_name: source_column_name
+      }));
 
+      
       await dispatch(updateVersionDetail({
         id: versionId,
-        payload: localDetails,
+        payload: updatedDetails,
       })).unwrap();
 
       dispatch(fetchVersionDetails(Number(versionId)));
@@ -302,9 +309,9 @@ const VersionDetailPage = () => {
                   <div className="col-span-2">
                     <Input
                       type="text"
-                      value={detail.column_name}
+                      value={detail.source_column_name}
                       onChange={(e) =>
-                        handleUpdateDetail(detail.vendor_system_column_id, 'column_name', e.target.value)
+                        handleUpdateDetail(detail.vendor_system_column_id, 'source_column_name', e.target.value)
                       }
                       className="font-mono"
                     />
