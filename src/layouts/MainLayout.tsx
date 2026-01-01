@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Package, Layers, Home } from 'lucide-react';
+import { Package, Layers, Home, Users } from 'lucide-react';
 import ThemeToggle from '@/components/shared/ThemeToggle';
 
 interface MainLayoutProps {
@@ -13,6 +13,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
   const navItems = [
     // { path: '/', label: 'Dashboard', icon: Home },
     { path: '/vendors', label: 'Vendors', icon: Package },
+    { path: '/clients', label: 'Clients', icon: Users },
     // { path: '/versions', label: 'Versions', icon: Package },
   ];
 

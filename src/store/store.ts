@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import vendorsReducer from './vendorsSlice';
+import clientsReducer from './clientsSlice';
 import versionsReducer from './versionsSlice';
 
 // Configure Redux store with all slices
 export const store = configureStore({
   reducer: {
     vendors: vendorsReducer,
+    clients: clientsReducer,
     versions: versionsReducer,
   },
   middleware: (getDefaultMiddleware) =>

@@ -8,6 +8,10 @@ import { ThemeProvider } from "next-themes";
 import { store } from '@/store/store';
 import Index from "./pages/Index";
 import VendorListingPage from "./pages/VendorListingPage";
+import ClientListingPage from "./pages/ClientListingPage";
+import ClientCreatePage from "./pages/ClientCreatePage";
+import ClientDetailPage from "./pages/ClientDetailPage";
+import ClientEditPage from "./pages/ClientEditPage";
 import VersionListingPage from "./pages/VersionListingPage";
 import VersionDetailPage from "./pages/VersionDetailPage";
 import NotFound from "./pages/NotFound";
@@ -26,6 +30,10 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/vendors" element={<VendorListingPage />} />
+              <Route path="/clients" element={<ClientListingPage />} />
+              <Route path="/clients/create" element={<ClientCreatePage />} />
+              <Route path="/clients/:id" element={<ClientDetailPage />} />
+              <Route path="/clients/:id/edit" element={<ClientEditPage />} />
               <Route path="/vendors/:vendorId/versions" element={<VersionListingPage />} />
               <Route path="/vendors/:vendorId/versions/:versionId" element={<VersionDetailPage />} />
               <Route path="/versions" element={<AllVersionsListingPage />} />
