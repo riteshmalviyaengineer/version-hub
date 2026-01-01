@@ -362,7 +362,7 @@ const ClientCreatePage = () => {
             </div>
           </div>
 
-          <div className="bg-card rounded-lg border border-border p-6">
+          {/* <div className="bg-card rounded-lg border border-border p-6">
             <h3 className="text-lg font-semibold mb-4">Date Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -385,7 +385,7 @@ const ClientCreatePage = () => {
                 />
               </div>
             </div>
-          </div>
+          </div> */}
 
           <div className="flex justify-end gap-4 pt-6 border-t">
             <Button type="button" variant="outline" onClick={handleBack}>
