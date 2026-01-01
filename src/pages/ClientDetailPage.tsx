@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { ArrowLeft, Edit, Trash2 } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { fetchClients, deleteClient } from '@/store/clientsSlice';
-import { Client } from '@/services/clientService';
+import { deleteClient } from '@/store/clientsSlice';
+import { Client, clientService } from '@/services/clientService';
 import MainLayout from '@/layouts/MainLayout';
 import PageHeader from '@/components/shared/PageHeader';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
@@ -19,27 +19,31 @@ const ClientDetailPage = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { toast } = useToast();
-  const { clients, loading } = useAppSelector((state) => state.clients);
 
   const [client, setClient] = useState<Client | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
 
   useEffect(() => {
-    if (clients.length === 0) {
-      dispatch(fetchClients());
-    }
-  }, [clients.length, dispatch]);
-
-  useEffect(() => {
-    if (clients.length > 0 && id) {
-      const foundClient = clients.find(c => c.id === parseInt(id));
-      if (foundClient) {
-        setClient(foundClient);
-      } else {
-        navigate('/clients');
+    const fetchClient = async () => {
+      if (!id) return;
+      
+      try {
+        setLoading(true);
+        setError(null);
+        const clientData = await clientService.getById(parseInt(id));
+        setClient(clientData);
+      } catch (err) {
+        setError('Failed to load client details');
+        console.error('Error fetching client:', err);
+      } finally {
+        setLoading(false);
       }
-    }
-  }, [clients, id, navigate]);
+    };
+
+    fetchClient();
+  }, [id]);
 
   const handleDeleteClick = () => {
     setDeleteConfirmOpen(true);
@@ -75,7 +79,7 @@ const ClientDetailPage = () => {
     });
   };
 
-  if (loading && !client) {
+  if (loading) {
     return (
       <MainLayout>
         <div className="flex justify-center items-center min-h-96">
@@ -85,12 +89,12 @@ const ClientDetailPage = () => {
     );
   }
 
-  if (!client) {
+  if (error || !client) {
     return (
       <MainLayout>
         <ErrorMessage
-          message="Client not found"
-          onRetry={() => navigate('/clients')}
+          message={error || "Client not found"}
+          onRetry={() => window.location.reload()}
         />
       </MainLayout>
     );

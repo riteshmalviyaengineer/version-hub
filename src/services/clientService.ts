@@ -34,23 +34,28 @@ export interface ClientsResponse {
 }
 
 export interface CreateClientPayload {
-  AKA: string;
-  AgencyFDID: string;
-  AgencyNameLong: string;
-  AgencyNameShort: string;
-  AgencyState: string;
-  AgencyTimeZone: string;
-  CADLinkField: string;
-  DataSource: string;
-  IncTypeStandard: number;
-  PlugUglyFDID: string;
-  RMSLinkField: string;
-  RecordCustomerID: string;
-  RecordUseType: number;
-  RespectDST: number;
-  SourceProviderID: string;
-  UpsertMatchingField: string;
+  agencynameabbrv: string;
+  agencynamelong: string;
+  agencynameshort: string;
+  agencystate: string;
+  alias1: string;
+  alias2: string;
+  created_date: string;
+  esri_global_id: string;
+  fdid: string;
+  geom: string;
+  inctypestandard: number;
+  last_edit_date: string;
+  latitude: string;
+  longitude: string;
+  plugugly_uuid: string;
+  pluguglyfdid: string;
+  sourcekey1: string;
+  sourcekey2: string;
+  sourcekey3: string;
+  sourcetype: string;
   version_id: number;
+  workflow_route: string;
 }
 
 export interface UpdateClientPayload {
@@ -83,6 +88,12 @@ export const clientService = {
   // Get all clients
   getAll: async (): Promise<ClientsResponse> => {
     const response = await api.get('/clients/get_all');
+    return response.data;
+  },
+
+  // Get a single client by ID
+  getById: async (id: number): Promise<Client> => {
+    const response = await api.get(`/clients/get?id=${id}`);
     return response.data;
   },
 

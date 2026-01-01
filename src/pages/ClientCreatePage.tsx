@@ -20,23 +20,28 @@ const ClientCreatePage = () => {
   const { versions } = useAppSelector((state) => state.clients);
 
   const [formData, setFormData] = useState<CreateClientPayload>({
-    AKA: '',
-    AgencyFDID: '',
-    AgencyNameLong: '',
-    AgencyNameShort: '',
-    AgencyState: '',
-    AgencyTimeZone: '',
-    CADLinkField: '',
-    DataSource: '',
-    IncTypeStandard: 1,
-    PlugUglyFDID: '',
-    RMSLinkField: '',
-    RecordCustomerID: '',
-    RecordUseType: 1,
-    RespectDST: 1,
-    SourceProviderID: '',
-    UpsertMatchingField: '',
+    agencynameabbrv: '',
+    agencynamelong: '',
+    agencynameshort: '',
+    agencystate: '',
+    alias1: '',
+    alias2: '',
+    created_date: '',
+    esri_global_id: '',
+    fdid: '',
+    geom: '',
+    inctypestandard: 1,
+    last_edit_date: '',
+    latitude: '',
+    longitude: '',
+    plugugly_uuid: '',
+    pluguglyfdid: '',
+    sourcekey1: '',
+    sourcekey2: '',
+    sourcekey3: '',
+    sourcetype: '',
     version_id: 0,
+    workflow_route: '',
   });
   const [errors, setErrors] = useState<Partial<Record<keyof CreateClientPayload, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -51,16 +56,16 @@ const ClientCreatePage = () => {
   const validate = (): boolean => {
     const newErrors: Partial<Record<keyof CreateClientPayload, string>> = {};
 
-    if (!formData.AgencyNameLong.trim()) {
-      newErrors.AgencyNameLong = 'Agency name is required';
+    if (!formData.agencynamelong.trim()) {
+      newErrors.agencynamelong = 'Agency name is required';
     }
 
-    if (!formData.PlugUglyFDID.trim()) {
-      newErrors.PlugUglyFDID = 'PlugUgly FDID is required';
+    if (!formData.pluguglyfdid.trim()) {
+      newErrors.pluguglyfdid = 'PlugUgly FDID is required';
     }
 
-    if (!formData.AgencyFDID.trim()) {
-      newErrors.AgencyFDID = 'Agency FDID is required';
+    if (!formData.fdid.trim()) {
+      newErrors.fdid = 'FDID is required';
     }
 
     if (formData.version_id === 0) {
@@ -79,7 +84,7 @@ const ClientCreatePage = () => {
         await dispatch(createClient(formData)).unwrap();
         toast({
           title: 'Client created',
-          description: `${formData.AgencyNameLong} has been created successfully.`,
+          description: `${formData.agencynamelong} has been created successfully.`,
         });
         navigate('/clients');
       } catch (error) {
@@ -121,84 +126,94 @@ const ClientCreatePage = () => {
             <h3 className="text-lg font-semibold mb-4">Basic Information</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="AgencyNameLong">Agency Name Long *</Label>
+                <Label htmlFor="agencynamelong">Agency Name Long *</Label>
                 <Input
-                  id="AgencyNameLong"
-                  value={formData.AgencyNameLong}
-                  onChange={(e) => setFormData({ ...formData, AgencyNameLong: e.target.value })}
+                  id="agencynamelong"
+                  value={formData.agencynamelong}
+                  onChange={(e) => setFormData({ ...formData, agencynamelong: e.target.value })}
                   placeholder="Fire Department of Example City"
-                  className={errors.AgencyNameLong ? 'border-destructive' : ''}
+                  className={errors.agencynamelong ? 'border-destructive' : ''}
                 />
-                {errors.AgencyNameLong && (
-                  <p className="text-sm text-destructive">{errors.AgencyNameLong}</p>
+                {errors.agencynamelong && (
+                  <p className="text-sm text-destructive">{errors.agencynamelong}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="AgencyNameShort">Agency Name Short</Label>
+                <Label htmlFor="agencynameshort">Agency Name Short</Label>
                 <Input
-                  id="AgencyNameShort"
-                  value={formData.AgencyNameShort}
-                  onChange={(e) => setFormData({ ...formData, AgencyNameShort: e.target.value })}
+                  id="agencynameshort"
+                  value={formData.agencynameshort}
+                  onChange={(e) => setFormData({ ...formData, agencynameshort: e.target.value })}
                   placeholder="FDEC"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="AKA">AKA</Label>
+                <Label htmlFor="agencynameabbrv">Agency Name Abbrv</Label>
                 <Input
-                  id="AKA"
-                  value={formData.AKA}
-                  onChange={(e) => setFormData({ ...formData, AKA: e.target.value })}
-                  placeholder="Example Fire"
+                  id="agencynameabbrv"
+                  value={formData.agencynameabbrv}
+                  onChange={(e) => setFormData({ ...formData, agencynameabbrv: e.target.value })}
+                  placeholder="FDEC"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="AgencyFDID">Agency FDID *</Label>
+                <Label htmlFor="fdid">FDID *</Label>
                 <Input
-                  id="AgencyFDID"
-                  value={formData.AgencyFDID}
-                  onChange={(e) => setFormData({ ...formData, AgencyFDID: e.target.value })}
+                  id="fdid"
+                  value={formData.fdid}
+                  onChange={(e) => setFormData({ ...formData, fdid: e.target.value })}
                   placeholder="04601"
-                  className={errors.AgencyFDID ? 'border-destructive' : ''}
+                  className={errors.fdid ? 'border-destructive' : ''}
                 />
-                {errors.AgencyFDID && (
-                  <p className="text-sm text-destructive">{errors.AgencyFDID}</p>
+                {errors.fdid && (
+                  <p className="text-sm text-destructive">{errors.fdid}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="PlugUglyFDID">PlugUgly FDID *</Label>
+                <Label htmlFor="pluguglyfdid">PlugUgly FDID *</Label>
                 <Input
-                  id="PlugUglyFDID"
-                  value={formData.PlugUglyFDID}
-                  onChange={(e) => setFormData({ ...formData, PlugUglyFDID: e.target.value })}
+                  id="pluguglyfdid"
+                  value={formData.pluguglyfdid}
+                  onChange={(e) => setFormData({ ...formData, pluguglyfdid: e.target.value })}
                   placeholder="MI-04601"
-                  className={errors.PlugUglyFDID ? 'border-destructive' : ''}
+                  className={errors.pluguglyfdid ? 'border-destructive' : ''}
                 />
-                {errors.PlugUglyFDID && (
-                  <p className="text-sm text-destructive">{errors.PlugUglyFDID}</p>
+                {errors.pluguglyfdid && (
+                  <p className="text-sm text-destructive">{errors.pluguglyfdid}</p>
                 )}
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="AgencyState">Agency State</Label>
+                <Label htmlFor="agencystate">Agency State</Label>
                 <Input
-                  id="AgencyState"
-                  value={formData.AgencyState}
-                  onChange={(e) => setFormData({ ...formData, AgencyState: e.target.value })}
+                  id="agencystate"
+                  value={formData.agencystate}
+                  onChange={(e) => setFormData({ ...formData, agencystate: e.target.value })}
                   placeholder="MI"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="AgencyTimeZone">Agency Time Zone</Label>
+                <Label htmlFor="alias1">Alias 1</Label>
                 <Input
-                  id="AgencyTimeZone"
-                  value={formData.AgencyTimeZone}
-                  onChange={(e) => setFormData({ ...formData, AgencyTimeZone: e.target.value })}
-                  placeholder="America/New_York"
+                  id="alias1"
+                  value={formData.alias1}
+                  onChange={(e) => setFormData({ ...formData, alias1: e.target.value })}
+                  placeholder="Example Fire"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="alias2">Alias 2</Label>
+                <Input
+                  id="alias2"
+                  value={formData.alias2}
+                  onChange={(e) => setFormData({ ...formData, alias2: e.target.value })}
+                  placeholder="City Fire"
                 />
               </div>
 
@@ -230,100 +245,143 @@ const ClientCreatePage = () => {
             <h3 className="text-lg font-semibold mb-4">Data Integration Settings</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="DataSource">Data Source</Label>
+                <Label htmlFor="sourcetype">Source Type</Label>
                 <Input
-                  id="DataSource"
-                  value={formData.DataSource}
-                  onChange={(e) => setFormData({ ...formData, DataSource: e.target.value })}
+                  id="sourcetype"
+                  value={formData.sourcetype}
+                  onChange={(e) => setFormData({ ...formData, sourcetype: e.target.value })}
                   placeholder="firstdue"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="CADLinkField">CAD Link Field</Label>
+                <Label htmlFor="sourcekey1">Source Key 1</Label>
                 <Input
-                  id="CADLinkField"
-                  value={formData.CADLinkField}
-                  onChange={(e) => setFormData({ ...formData, CADLinkField: e.target.value })}
-                  placeholder="CAD123"
+                  id="sourcekey1"
+                  value={formData.sourcekey1}
+                  onChange={(e) => setFormData({ ...formData, sourcekey1: e.target.value })}
+                  placeholder="key1"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="RMSLinkField">RMS Link Field</Label>
+                <Label htmlFor="sourcekey2">Source Key 2</Label>
                 <Input
-                  id="RMSLinkField"
-                  value={formData.RMSLinkField}
-                  onChange={(e) => setFormData({ ...formData, RMSLinkField: e.target.value })}
-                  placeholder="RMS456"
+                  id="sourcekey2"
+                  value={formData.sourcekey2}
+                  onChange={(e) => setFormData({ ...formData, sourcekey2: e.target.value })}
+                  placeholder="key2"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="RecordCustomerID">Record Customer ID</Label>
+                <Label htmlFor="sourcekey3">Source Key 3</Label>
                 <Input
-                  id="RecordCustomerID"
-                  value={formData.RecordCustomerID}
-                  onChange={(e) => setFormData({ ...formData, RecordCustomerID: e.target.value })}
-                  placeholder="CUST001"
+                  id="sourcekey3"
+                  value={formData.sourcekey3}
+                  onChange={(e) => setFormData({ ...formData, sourcekey3: e.target.value })}
+                  placeholder="key3"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="SourceProviderID">Source Provider ID</Label>
+                <Label htmlFor="workflow_route">Workflow Route</Label>
                 <Input
-                  id="SourceProviderID"
-                  value={formData.SourceProviderID}
-                  onChange={(e) => setFormData({ ...formData, SourceProviderID: e.target.value })}
-                  placeholder="PROV001"
+                  id="workflow_route"
+                  value={formData.workflow_route}
+                  onChange={(e) => setFormData({ ...formData, workflow_route: e.target.value })}
+                  placeholder="/route1"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="UpsertMatchingField">Upsert Matching Field</Label>
+                <Label htmlFor="esri_global_id">ESRI Global ID</Label>
                 <Input
-                  id="UpsertMatchingField"
-                  value={formData.UpsertMatchingField}
-                  onChange={(e) => setFormData({ ...formData, UpsertMatchingField: e.target.value })}
-                  placeholder="IncidentNumber"
+                  id="esri_global_id"
+                  value={formData.esri_global_id}
+                  onChange={(e) => setFormData({ ...formData, esri_global_id: e.target.value })}
+                  placeholder="abc123"
                 />
               </div>
             </div>
           </div>
 
           <div className="bg-card rounded-lg border border-border p-6">
-            <h3 className="text-lg font-semibold mb-4">Configuration Settings</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <h3 className="text-lg font-semibold mb-4">Location & Configuration</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="IncTypeStandard">Inc Type Standard</Label>
+                <Label htmlFor="latitude">Latitude</Label>
                 <Input
-                  id="IncTypeStandard"
+                  id="latitude"
+                  value={formData.latitude}
+                  onChange={(e) => setFormData({ ...formData, latitude: e.target.value })}
+                  placeholder="42.3314"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="longitude">Longitude</Label>
+                <Input
+                  id="longitude"
+                  value={formData.longitude}
+                  onChange={(e) => setFormData({ ...formData, longitude: e.target.value })}
+                  placeholder="-83.0458"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="geom">Geometry</Label>
+                <Input
+                  id="geom"
+                  value={formData.geom}
+                  onChange={(e) => setFormData({ ...formData, geom: e.target.value })}
+                  placeholder="POINT(-83.0458 42.3314)"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="inctypestandard">Inc Type Standard</Label>
+                <Input
+                  id="inctypestandard"
                   type="number"
-                  value={formData.IncTypeStandard}
-                  onChange={(e) => setFormData({ ...formData, IncTypeStandard: parseInt(e.target.value) || 1 })}
+                  value={formData.inctypestandard}
+                  onChange={(e) => setFormData({ ...formData, inctypestandard: parseInt(e.target.value) || 1 })}
                   placeholder="1"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="RecordUseType">Record Use Type</Label>
+                <Label htmlFor="plugugly_uuid">PlugUgly UUID</Label>
                 <Input
-                  id="RecordUseType"
-                  type="number"
-                  value={formData.RecordUseType}
-                  onChange={(e) => setFormData({ ...formData, RecordUseType: parseInt(e.target.value) || 1 })}
-                  placeholder="1"
+                  id="plugugly_uuid"
+                  value={formData.plugugly_uuid}
+                  onChange={(e) => setFormData({ ...formData, plugugly_uuid: e.target.value })}
+                  placeholder="550e8400-e29b-41d4-a716-446655440000"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-card rounded-lg border border-border p-6">
+            <h3 className="text-lg font-semibold mb-4">Date Information</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="created_date">Created Date</Label>
+                <Input
+                  id="created_date"
+                  type="date"
+                  value={formData.created_date}
+                  onChange={(e) => setFormData({ ...formData, created_date: e.target.value })}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="RespectDST">Respect DST</Label>
+                <Label htmlFor="last_edit_date">Last Edit Date</Label>
                 <Input
-                  id="RespectDST"
-                  type="number"
-                  value={formData.RespectDST}
-                  onChange={(e) => setFormData({ ...formData, RespectDST: parseInt(e.target.value) || 1 })}
-                  placeholder="1"
+                  id="last_edit_date"
+                  type="date"
+                  value={formData.last_edit_date}
+                  onChange={(e) => setFormData({ ...formData, last_edit_date: e.target.value })}
                 />
               </div>
             </div>
