@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Edit, Trash2, ExternalLink } from 'lucide-react';
+import { Plus, Edit, Trash2, ExternalLink, Search } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { fetchVendors, deleteVendor, createVendor, updateVendor } from '@/store/vendorsSlice';
 import { Vendor, CreateVendorPayload } from '@/services/vendorService';
@@ -12,6 +12,7 @@ import EmptyState from '@/components/shared/EmptyState';
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import VendorFormModal from '@/features/vendors/VendorFormModal';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 
 const VendorListingPage = () => {
@@ -25,6 +26,7 @@ const VendorListingPage = () => {
   const [editingVendor, setEditingVendor] = useState<Vendor | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [vendorToDelete, setVendorToDelete] = useState<Vendor | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     dispatch(fetchVendors());
@@ -106,6 +108,11 @@ const VendorListingPage = () => {
     });
   };
 
+  // Filter vendors based on search term
+  const filteredVendors = vendors.filter(vendor =>
+    vendor.vendor_name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <MainLayout>
       <PageHeader
@@ -121,14 +128,28 @@ const VendorListingPage = () => {
       />
 
       <div className="p-6">
+        {/* Search Bar */}
+        <div className="mb-6">
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Input
+              type="text"
+              placeholder="Search vendors by name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+
         {loading && vendors.length === 0 ? (
           <LoadingSpinner text="Loading vendors..." />
         ) : error ? (
           <ErrorMessage message={error} onRetry={() => dispatch(fetchVendors())} />
-        ) : vendors.length === 0 ? (
+        ) : filteredVendors.length === 0 ? (
           <EmptyState
-            title="No vendors yet"
-            description="Get started by creating your first vendor."
+            title={searchTerm ? "No vendors found" : "No vendors yet"}
+            description={searchTerm ? `No vendors match "${searchTerm}". Try a different search term.` : "Get started by creating your first vendor."}
             action={
               <Button onClick={handleCreateVendor} className="gap-2">
                 <Plus className="w-4 h-4" />
@@ -148,7 +169,7 @@ const VendorListingPage = () => {
                 </tr>
               </thead>
               <tbody>
-                {vendors.map((vendor) => (
+                {filteredVendors.map((vendor) => (
                   <tr key={vendor.id} className="group">
                     <td>
                       <button
