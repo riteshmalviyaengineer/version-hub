@@ -59,11 +59,26 @@ export interface CreateClientPayload {
 }
 
 export interface UpdateClientPayload {
-  AgencyNameLong: string;
-  DataSource: string;
-  PlugUglyFDID: string;
-  RecordUseType: number;
+  agencynameabbrv: string;
+  agencynamelong: string;
+  agencynameshort: string;
+  agencystate: string;
+  alias1: string;
+  alias2: string;
+  esri_global_id: string;
+  fdid: string;
+  geom: string;
+  inctypestandard: number;
+  latitude: string;
+  longitude: string;
+  plugugly_uuid: string;
+  pluguglyfdid: string;
+  sourcekey1: string;
+  sourcekey2: string;
+  sourcekey3: string;
+  sourcetype: string;
   version_id: number;
+  workflow_route: string;
 }
 
 // Version type for dropdown
