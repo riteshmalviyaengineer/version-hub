@@ -229,7 +229,7 @@ const ClientCreatePage = () => {
                   <SelectContent>
                     {versions.map((version) => (
                       <SelectItem key={version.id} value={version.id.toString()}>
-                        {version.version_name} ({version.version_code})
+                       {version.vendor_name} - {version.version_name} 
                       </SelectItem>
                     ))}
                   </SelectContent>

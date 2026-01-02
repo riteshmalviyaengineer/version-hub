@@ -70,7 +70,7 @@ export interface UpdateClientPayload {
 export interface VersionOption {
   id: number;
   version_name: string;
-  version_code: string;
+  vendor_name: string;
 }
 
 export interface VersionsResponse {
