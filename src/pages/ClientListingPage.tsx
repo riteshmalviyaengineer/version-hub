@@ -78,8 +78,6 @@ const ClientListingPage = () => {
     client.agencynamelong.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  console.log('Rendering ClientListingPage with clients:', clients);
-
   return (
     <MainLayout>
       <PageHeader
