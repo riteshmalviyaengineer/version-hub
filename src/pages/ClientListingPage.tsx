@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Trash2, ExternalLink } from 'lucide-react';
+import { Plus, Trash2, ExternalLink, Search } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 import { fetchClients, deleteClient } from '@/store/clientsSlice';
 import { Client } from '@/services/clientService';
@@ -11,6 +11,7 @@ import ErrorMessage from '@/components/shared/ErrorMessage';
 import EmptyState from '@/components/shared/EmptyState';
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
 
 const ClientListingPage = () => {
@@ -22,6 +23,7 @@ const ClientListingPage = () => {
   // Delete confirmation state
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     dispatch(fetchClients());
@@ -70,6 +72,12 @@ const ClientListingPage = () => {
     });
   };
 
+  // Filter clients based on search term
+  const filteredClients = clients.filter(client =>
+    client.pluguglyfdid.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    client.agencynamelong.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   console.log('Rendering ClientListingPage with clients:', clients);
 
   return (
@@ -87,14 +95,28 @@ const ClientListingPage = () => {
       />
 
       <div className="p-6">
+        {/* Search Bar */}
+        <div className="mb-6">
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Input
+              type="text"
+              placeholder="Search clients by Agency name or PlugUgly FDID..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-10"
+            />
+          </div>
+        </div>
+
         {loading && clients.length === 0 ? (
           <LoadingSpinner text="Loading clients..." />
         ) : error ? (
           <ErrorMessage message={error} onRetry={() => dispatch(fetchClients())} />
-        ) : clients.length === 0 ? (
+        ) : filteredClients.length === 0 ? (
           <EmptyState
-            title="No clients yet"
-            description="Get started by creating your first client."
+            title={searchTerm ? "No clients found" : "No clients yet"}
+            description={searchTerm ? `No clients match "${searchTerm}". Try a different search term.` : "Get started by creating your first client."}
             action={
               <Button onClick={handleCreateClient} className="gap-2">
                 <Plus className="w-4 h-4" />
@@ -108,12 +130,13 @@ const ClientListingPage = () => {
               <thead>
                 <tr>
                   <th>Agency Name</th>
+                  <th>PlugUgly FDID</th>
                   <th>Created At</th>
                   <th className="w-32 text-right">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {clients.map((client) => (
+                {filteredClients.map((client) => (
                   <tr key={client.id} className="group">
                     <td>
                       <button
@@ -123,6 +146,11 @@ const ClientListingPage = () => {
                         {client.agencynamelong}
                         <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </button>
+                    </td>
+                    <td>
+                      <code className="px-2 py-1 bg-secondary rounded text-xs font-mono">
+                        {client.pluguglyfdid}
+                      </code>
                     </td>
                     <td className="text-muted-foreground">{formatDate(client.created_at)}</td>
                     <td>
