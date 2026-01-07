@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import vendorsReducer from './vendorsSlice';
 import clientsReducer from './clientsSlice';
 import versionsReducer from './versionsSlice';
+import columnsReducer from './columnsSlice';
 
 // Configure Redux store with all slices
 export const store = configureStore({
@@ -9,6 +10,7 @@ export const store = configureStore({
     vendors: vendorsReducer,
     clients: clientsReducer,
     versions: versionsReducer,
+    columns: columnsReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

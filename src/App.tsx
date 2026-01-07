@@ -14,6 +14,7 @@ import ClientDetailPage from "./pages/ClientDetailPage";
 import ClientEditPage from "./pages/ClientEditPage";
 import VersionListingPage from "./pages/VersionListingPage";
 import VersionDetailPage from "./pages/VersionDetailPage";
+import ColumnListingPage from "./pages/ColumnListingPage";
 import NotFound from "./pages/NotFound";
 import AllVersionsListingPage from './pages/AllVersionsListingPage';
 
@@ -37,6 +38,7 @@ const App = () => (
               <Route path="/vendors/:vendorId/versions" element={<VersionListingPage />} />
               <Route path="/vendors/:vendorId/versions/:versionId" element={<VersionDetailPage />} />
               <Route path="/versions" element={<AllVersionsListingPage />} />
+              <Route path="/columns" element={<ColumnListingPage />} />
 
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
