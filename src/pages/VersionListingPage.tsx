@@ -1,18 +1,21 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Plus, Edit, Trash2, ExternalLink, ArrowLeft } from 'lucide-react';
+import { Plus, Edit, Trash2, ExternalLink, ArrowLeft, Copy } from 'lucide-react';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
-import { fetchVersionsByVendor, deleteVersion, createVersion, updateVersion } from '@/store/versionsSlice';
+import { fetchVersionsByVendor, deleteVersion, createVersion, updateVersion, duplicateVersion } from '@/store/versionsSlice';
 import { fetchVendors } from '@/store/vendorsSlice';
-import { Version, CreateVersionPayload } from '@/services/versionService';
+import { Version, CreateVersionPayload, DuplicateVersionPayload } from '@/services/versionService';
 import MainLayout from '@/layouts/MainLayout';
 import PageHeader from '@/components/shared/PageHeader';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import ErrorMessage from '@/components/shared/ErrorMessage';
 import EmptyState from '@/components/shared/EmptyState';
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
+import Modal from '@/components/shared/Modal';
 import VersionFormModal from '@/features/versions/VersionFormModal';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 
  const formatDate = (dateString: string) => {
@@ -41,6 +44,9 @@ const VersionListingPage = () => {
   const [editingVersion, setEditingVersion] = useState<Version | null>(null);
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
   const [versionToDelete, setVersionToDelete] = useState<Version | null>(null);
+  const [duplicateModalOpen, setDuplicateModalOpen] = useState(false);
+  const [versionToDuplicate, setVersionToDuplicate] = useState<Version | null>(null);
+  const [newVersionName, setNewVersionName] = useState('');
 
   useEffect(() => {
     if (vendorId) {
@@ -65,6 +71,36 @@ const VersionListingPage = () => {
   const handleDeleteClick = (version: Version) => {
     setVersionToDelete(version);
     setDeleteConfirmOpen(true);
+  };
+
+  const handleDuplicateClick = (version: Version) => {
+    setVersionToDuplicate(version);
+    setNewVersionName(`${version.version_name}_copy`);
+    setDuplicateModalOpen(true);
+  };
+
+  const handleDuplicateSubmit = async (newVersionName: string) => {
+    if (!versionToDuplicate) return;
+
+    try {
+      await dispatch(duplicateVersion({
+        new_version_name: newVersionName,
+        version_id: versionToDuplicate.id
+      })).unwrap();
+      toast({
+        title: 'Version duplicated',
+        description: `${newVersionName} has been created successfully.`,
+      });
+      dispatch(fetchVersionsByVendor(Number(vendorId)));
+      setDuplicateModalOpen(false);
+      setVersionToDuplicate(null);
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to duplicate version. Please try again.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const handleConfirmDelete = async () => {
@@ -201,6 +237,14 @@ const VersionListingPage = () => {
                         <Button
                           variant="ghost"
                           size="sm"
+                          onClick={() => handleDuplicateClick(version)}
+                          className="h-8 w-8 p-0"
+                        >
+                          <Copy className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           onClick={() => handleDeleteClick(version)}
                           className="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
                         >
@@ -237,6 +281,44 @@ const VersionListingPage = () => {
         confirmText="Delete"
         variant="destructive"
       />
+
+      {/* Duplicate Version Modal */}
+      <Modal
+        isOpen={duplicateModalOpen}
+        onClose={() => {
+          setDuplicateModalOpen(false);
+          setVersionToDuplicate(null);
+          setNewVersionName('');
+        }}
+        title="Duplicate Version"
+        description={`Create a duplicate of "${versionToDuplicate?.version_name}" with a new name.`}
+        footer={
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={() => {
+              setDuplicateModalOpen(false);
+              setVersionToDuplicate(null);
+              setNewVersionName('');
+            }}>
+              Cancel
+            </Button>
+            <Button onClick={() => handleDuplicateSubmit(newVersionName)}>
+              Duplicate
+            </Button>
+          </div>
+        }
+      >
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="new_version_name">New Version Name</Label>
+            <Input
+              id="new_version_name"
+              value={newVersionName}
+              onChange={(e) => setNewVersionName(e.target.value)}
+              placeholder="Enter new version name"
+            />
+          </div>
+        </div>
+      </Modal>
     </MainLayout>
   );
 };

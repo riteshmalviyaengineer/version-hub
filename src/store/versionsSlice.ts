@@ -6,6 +6,7 @@ import {
   CreateVersionPayload,
   CreateVersionDetailPayload,
   VendorMappingVersionDetail,
+  DuplicateVersionPayload,
 } from "@/services/versionService";
 
 // State interface
@@ -112,6 +113,20 @@ export const deleteVersion = createAsyncThunk(
     } catch (error: any) {
       return rejectWithValue(
         error.response?.data?.message || "Failed to delete version"
+      );
+    }
+  }
+);
+
+export const duplicateVersion = createAsyncThunk(
+  "versions/duplicate",
+  async (payload: DuplicateVersionPayload, { rejectWithValue }) => {
+    try {
+      const response = await versionService.duplicate(payload);
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to duplicate version"
       );
     }
   }
@@ -236,6 +251,11 @@ const versionsSlice = createSlice({
       .addCase(deleteVersion.fulfilled, (state, action) => {
         state.versions = state.versions.filter((v) => v.id !== action.payload);
         state.count -= 1;
+      })
+      // Duplicate version
+      .addCase(duplicateVersion.fulfilled, (state, action) => {
+        state.versions.push(action.payload);
+        state.count += 1;
       })
       // Fetch version details
       .addCase(fetchVersionDetails.pending, (state) => {

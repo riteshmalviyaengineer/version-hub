@@ -46,6 +46,11 @@ export interface CreateVersionDetailPayload {
   code_content: string;
 }
 
+export interface DuplicateVersionPayload {
+  new_version_name: string;
+  version_id: number;
+}
+
 // Version API service methods
 export const versionService = {
   Allversions: async (): Promise<VersionsResponse> => {
@@ -89,6 +94,12 @@ export const versionService = {
     const response = await api.delete(
       `/vendor-versions/delete?version_id=${versionId}`
     );
+    return response.data;
+  },
+
+  // Duplicate a version
+  duplicate: async (payload: DuplicateVersionPayload): Promise<Version> => {
+    const response = await api.post('/vendor-versions/duplicate', payload);
     return response.data;
   },
 
