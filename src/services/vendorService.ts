@@ -5,6 +5,7 @@ export interface Vendor {
   id: number;
   vendor_name: string;
   vendor_code: string;
+  vendor_type?: string;
   created_at: string;
 }
 
@@ -16,6 +17,7 @@ export interface VendorsResponse {
 export interface CreateVendorPayload {
   vendor_name: string;
   vendor_code: string;
+  vendor_type?: string;
 }
 
 export interface DeleteResponse {

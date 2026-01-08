@@ -13,6 +13,7 @@ import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import VendorFormModal from '@/features/vendors/VendorFormModal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 
 const VendorListingPage = () => {
@@ -164,6 +165,7 @@ const VendorListingPage = () => {
                 <tr>
                   <th>Vendor Name</th>
                   <th>Vendor Code</th>
+                  <th>Vendor Type</th>
                   <th>Created At</th>
                   <th className="w-32 text-right">Actions</th>
                 </tr>
@@ -184,6 +186,11 @@ const VendorListingPage = () => {
                       <code className="px-2 py-1 bg-secondary rounded text-xs font-mono">
                         {vendor.vendor_code}
                       </code>
+                    </td>
+                    <td>
+                      <Badge variant="secondary">
+                        {vendor.vendor_type || 'Not specified'}
+                      </Badge>
                     </td>
                     <td className="text-muted-foreground">{formatDate(vendor.created_at)}</td>
                     <td>

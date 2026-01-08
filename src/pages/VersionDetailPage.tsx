@@ -178,7 +178,7 @@ const VersionDetailPage = () => {
         description="Configure version parameters and code"
         breadcrumbs={[
           { label: 'Vendors', path: '/vendors' },
-          { label: vendor?.vendor_name || 'Vendor', path: `/vendors/${vendorId}/versions` },
+          { label: vendor ? `${vendor.vendor_name} (${vendor.vendor_type})` : 'Vendor', path: `/vendors/${vendorId}/versions` },
           { label: selectedVersion?.version_name || 'Version' , path: `/vendors/${vendorId}/versions`},
           { label: versionId },
         ]}

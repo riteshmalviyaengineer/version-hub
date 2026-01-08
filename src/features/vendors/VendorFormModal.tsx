@@ -4,6 +4,7 @@ import Modal from '@/components/shared/Modal';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface VendorFormModalProps {
   isOpen: boolean;
@@ -12,10 +13,13 @@ interface VendorFormModalProps {
   vendor?: Vendor | null;
 }
 
+const vendorTypes = ['Software Provider', 'Hardware Provider', 'Service Provider'];
+
 const VendorFormModal = ({ isOpen, onClose, onSubmit, vendor }: VendorFormModalProps) => {
   const [formData, setFormData] = useState<CreateVendorPayload>({
     vendor_name: '',
     vendor_code: '',
+    vendor_type: '',
   });
   const [errors, setErrors] = useState<Partial<CreateVendorPayload>>({});
 
@@ -25,6 +29,7 @@ const VendorFormModal = ({ isOpen, onClose, onSubmit, vendor }: VendorFormModalP
       setFormData({
         vendor_name: vendor?.vendor_name || '',
         vendor_code: vendor?.vendor_code || '',
+        vendor_type: vendor?.vendor_type || '',
       });
       setErrors({});
     }
@@ -48,7 +53,12 @@ const VendorFormModal = ({ isOpen, onClose, onSubmit, vendor }: VendorFormModalP
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validate()) {
-      onSubmit(formData);
+      const payload: CreateVendorPayload = {
+        vendor_name: formData.vendor_name,
+        vendor_code: formData.vendor_code,
+        ...(formData.vendor_type && { vendor_type: formData.vendor_type }),
+      };
+      onSubmit(payload);
     }
   };
 
@@ -95,6 +105,28 @@ const VendorFormModal = ({ isOpen, onClose, onSubmit, vendor }: VendorFormModalP
           />
           {errors.vendor_code && (
             <p className="text-sm text-destructive">{errors.vendor_code}</p>
+          )}
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="vendor_type">Vendor Type</Label>
+          <Select
+            value={formData.vendor_type}
+            onValueChange={(value) => setFormData({ ...formData, vendor_type: value })}
+          >
+            <SelectTrigger className={errors.vendor_type ? 'border-destructive' : ''}>
+              <SelectValue placeholder="Select vendor type" />
+            </SelectTrigger>
+            <SelectContent>
+              {vendorTypes.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {type}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.vendor_type && (
+            <p className="text-sm text-destructive">{errors.vendor_type}</p>
           )}
         </div>
       </form>

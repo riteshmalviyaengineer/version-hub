@@ -121,7 +121,7 @@ const VersionListingPage = () => {
   return (
     <MainLayout>
       <PageHeader
-        title={`Versions${vendor ? ` - ${vendor.vendor_name}` : ''}`}
+        title={`Versions${vendor ? ` - ${vendor.vendor_name} (${vendor.vendor_type})` : ''}`}
         description="Manage versions for this vendor"
         breadcrumbs={[
           { label: 'Vendors', path: '/vendors' },
