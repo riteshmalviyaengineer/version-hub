@@ -73,9 +73,9 @@ const ClientListingPage = () => {
   };
 
   // Filter clients based on search term
-  const filteredClients = clients.filter(client =>
-    client.pluguglyfdid.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.agencynamelong.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredClients = (clients ?? []).filter(client =>
+    client?.pluguglyfdid?.toLowerCase()?.includes(searchTerm?.toLowerCase()) ||
+    client?.agencynamelong?.toLowerCase()?.includes(searchTerm?.toLowerCase())
   );
 
   return (
@@ -141,13 +141,13 @@ const ClientListingPage = () => {
                         onClick={() => handleClientClick(client.id)}
                         className="flex items-center gap-2 text-primary hover:text-primary/80 font-medium transition-colors"
                       >
-                        {client.agencynamelong}
+                        {client.agencynamelong || ""}
                         <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                       </button>
                     </td>
                     <td>
                       <code className="px-2 py-1 bg-secondary rounded text-xs font-mono">
-                        {client.pluguglyfdid}
+                        {client.pluguglyfdid  || ""}
                       </code>
                     </td>
                     <td className="text-muted-foreground">{formatDate(client.created_at)}</td>
